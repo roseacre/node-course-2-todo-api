@@ -23,7 +23,7 @@ app.delete('/todos/:id', (req, res) => {
     if(!todo) {
       res.status(400).send({});
     } else {
-      res.status(200).send(todo);
+      res.status(200).send({todo});
     }
   }).catch((e) => {
       res.status(400).send({});
