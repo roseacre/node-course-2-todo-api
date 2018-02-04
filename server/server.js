@@ -8,7 +8,46 @@ var {ObjectID} = require('mongodb');
 
 var app = express();
 
+const port = process.env.PORT || 3000;
+
 app.use(bodyParser.json());
+
+app.delete('/todos/:id', (req, res) => {
+  var id = req.params.id;
+
+  if (!ObjectID.isValid(id)) {
+    return res.status(404).send({});
+  }
+
+  Todo.findByIdAndRemove(id).then((todo) => {
+    if(!todo) {
+      res.status(400).send({});
+    } else {
+      res.status(200).send(todo);
+    }
+  }).catch((e) => {
+      res.status(400).send({});
+  });
+});
+
+
+// app.delete('/todos/:id', (req, res) => {
+//   var id = req.params.id;
+//
+//   if (!ObjectID.isValid(id)) {
+//     return res.status(404).send();
+//   }
+//
+//   Todo.findByIdAndRemove(id).then((todo) => {
+//     if (!todo) {
+//       return res.status(404).send();
+//     }
+//
+//     res.send(todo);
+//   }).catch((e) => {
+//     res.status(400).send();
+//   });
+// });
 
 app.post('/todos', (req, res) => {
     var todo = new Todo({
@@ -67,8 +106,8 @@ app.get('/todos/:id', (req, res) => {
 //   }
 // });
 
-app.listen(3000, () => {
-  console.log('started on port 3000');
+app.listen(port, () => {
+  console.log(`started on port ${port}`);
 });
 
 module.exports = {app};
